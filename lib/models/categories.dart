@@ -1,4 +1,4 @@
-class Category{
+class Category {
   String title;
   String title2;
   String query;

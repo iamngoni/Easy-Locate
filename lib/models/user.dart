@@ -7,15 +7,12 @@ class User {
   List<dynamic> likes;
 
   User(
-      {
-        this.id,
-        this.username,
-        this.email,
-        this.isVerified,
-        this.mobileNumber,
-        this.likes
-      }
-      );
+      {this.id,
+      this.username,
+      this.email,
+      this.isVerified,
+      this.mobileNumber,
+      this.likes});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(

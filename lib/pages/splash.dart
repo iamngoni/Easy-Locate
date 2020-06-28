@@ -15,9 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
       isTimerDone = true;
     });
 
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => Landing()
-    ));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
   }
 
   @override
@@ -49,10 +47,21 @@ class _SplashScreenState extends State<SplashScreen> {
               left: _statics.width * 0.25,
               child: Column(
                 children: <Widget>[
-                  isTimerDone == false ? Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: SizedBox(height: 10, width: 10, child: CircularProgressIndicator(backgroundColor: Colors.white,),),
-                  ) : SizedBox(height: 0, width: 0,),
+                  isTimerDone == false
+                      ? Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: SizedBox(
+                            height: 10,
+                            width: 10,
+                            child: CircularProgressIndicator(
+                              backgroundColor: Colors.white,
+                            ),
+                          ),
+                        )
+                      : SizedBox(
+                          height: 0,
+                          width: 0,
+                        ),
                   Text(
                     "Every Product Within Your Reach",
                     style: TextStyle(

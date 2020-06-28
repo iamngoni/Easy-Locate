@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Statics{
+class Statics {
   double width;
   double height;
   Color purple = Color(0xFF6837C7);
@@ -8,7 +8,7 @@ class Statics{
   Color accentPurple = Color(0xFFa03fe2);
   Color orange = Color(0xFFFF6C58);
   Color lightOrange = Color(0xFFFFAA91);
-  Statics(context){
+  Statics(context) {
     this.width = MediaQuery.of(context).size.width;
     this.height = MediaQuery.of(context).size.height;
   }

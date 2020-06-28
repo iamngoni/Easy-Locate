@@ -36,8 +36,19 @@ class _LandingState extends State<Landing> {
                         color: _statics.purplish,
                       ),
                       child: MaterialButton(
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProgressHUD(child: Login()))),
-                        child: Text("LOGIN", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold,),),
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ProgressHUD(child: Login()))),
+                        child: Text(
+                          "LOGIN",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -51,7 +62,14 @@ class _LandingState extends State<Landing> {
                       ),
                       child: MaterialButton(
                         onPressed: null,
-                        child: Text("SIGNUP", style: TextStyle(color: _statics.purplish, fontSize: 18, fontWeight: FontWeight.bold,),),
+                        child: Text(
+                          "SIGNUP",
+                          style: TextStyle(
+                            color: _statics.purplish,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ),
