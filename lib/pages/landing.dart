@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:easy_locate/pages/login.dart';
+import 'package:easy_locate/pages/home.dart';
 import 'package:easy_locate/statics/static.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
@@ -36,11 +36,7 @@ class _LandingState extends State<Landing> {
                         color: _statics.purplish,
                       ),
                       child: MaterialButton(
-                        onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    ProgressHUD(child: Login()))),
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProgressHUD(child: Home(),),),),
                         child: Text(
                           "LOGIN",
                           style: TextStyle(

@@ -1,9 +1,12 @@
 import 'package:easy_locate/api/apiCalls.dart';
 import 'package:easy_locate/models/token.dart';
 import 'package:easy_locate/models/user.dart';
+import 'package:easy_locate/pages/home.dart';
 import 'package:easy_locate/statics/static.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -152,8 +155,19 @@ class _LoginState extends State<Login> {
                                 if (_formKey.currentState.validate()) {
                                   final progress = ProgressHUD.of(context);
                                   progress.showWithText("Signing in");
-                                  JwtToken token = await _api.login(_username, _password, context);
-                                  
+                                  JwtToken _token = await _api.login(_username, _password, context);
+                                  // Map<String, dynamic> _decodedToken = JwtDecoder.decode(_token.token);
+                                  if(_token != null){
+                                    final preferences = await SharedPreferences.getInstance();
+                                    await preferences.setString('token', _token.token);
+                                    String savedToken = preferences.getString('token');
+                                    if(savedToken != null || savedToken != ''){
+                                      Navigator.pop(context);
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => Home()));
+                                    }  
+                                  }else{
+                                    Toast.show("Exception!", context, backgroundColor: Colors.grey.withOpacity(0.4), textColor: Colors.red, gravity: Toast.BOTTOM);
+                                  }                              
                                 }
                               },
                             ),
