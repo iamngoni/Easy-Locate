@@ -11,16 +11,16 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   SharedPreferences _preferences;
   var _api = new ApiCalls();
-  initialisePreferences() async{
+  initialisePreferences() async {
     final preferences = await SharedPreferences.getInstance();
     return preferences;
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     Statics _statics = new Statics(context);
-    initialisePreferences().then((preferences){
-      setState((){
+    initialisePreferences().then((preferences) {
+      setState(() {
         _preferences = preferences;
       });
     });
@@ -73,25 +73,42 @@ class _HomeState extends State<Home> {
                     children: <Widget>[
                       Icon(
                         Icons.location_on,
-                        size: 30,
+                        size: 27,
                         color: Colors.grey,
                       ),
                       FutureBuilder(
-                          future: _api.getAddressFromLatLng(),
-                          builder: (context, snapshot){
-                            while(!snapshot.hasData){
-                              return CircularProgressIndicator(backgroundColor: _statics.purplish,);
-                            }
-                            print(snapshot.data);
-                          },
-                        ),
+                        future: _api.getAddressFromLatLng(),
+                        builder: (context, snapshot) {
+                          while (!snapshot.hasData) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: SizedBox(
+                                height: 18,
+                                width: 18,
+                                child: CircularProgressIndicator(
+                                  backgroundColor: _statics.purplish,
+                                ),
+                              ),
+                            );
+                          }
+                          print(snapshot.data);
+                        },
+                      ),
                     ],
                   ),
                 ],
               ),
+              Container(
+                height: _statics.height * 0.9,
+                width: _statics.width,
+                decoration: BoxDecoration(
+                  color: _statics.purplish,
+                ),
+              ),
             ],
           ),
-        ),  
+        ),
       ),
     );
   }

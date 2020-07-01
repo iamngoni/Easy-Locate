@@ -44,31 +44,35 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             Positioned(
               bottom: 5,
-              left: _statics.width * 0.25,
-              child: Column(
-                children: <Widget>[
-                  isTimerDone == false
-                      ? Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: SizedBox(
-                            height: 10,
-                            width: 10,
-                            child: CircularProgressIndicator(
-                              backgroundColor: Colors.white,
+              child: Container(
+                width: _statics.width,
+                child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      isTimerDone == false
+                          ? Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: SizedBox(
+                                height: 10,
+                                width: 10,
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.white,
+                                ),
+                              ),
+                            )
+                          : SizedBox(
+                              height: 0,
+                              width: 0,
                             ),
-                          ),
-                        )
-                      : SizedBox(
-                          height: 0,
-                          width: 0,
+                      Text(
+                        "Every Product Within Your Reach",
+                        style: TextStyle(
+                          color: _statics.purplish,
                         ),
-                  Text(
-                    "Every Product Within Your Reach",
-                    style: TextStyle(
-                      color: _statics.purplish,
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ],

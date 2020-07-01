@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:easy_locate/pages/home.dart';
+import 'package:easy_locate/pages/signup.dart';
 import 'package:easy_locate/statics/static.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
@@ -36,7 +37,14 @@ class _LandingState extends State<Landing> {
                         color: _statics.purplish,
                       ),
                       child: MaterialButton(
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProgressHUD(child: Home(),),),),
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProgressHUD(
+                              child: Home(),
+                            ),
+                          ),
+                        ),
                         child: Text(
                           "LOGIN",
                           style: TextStyle(
@@ -57,7 +65,8 @@ class _LandingState extends State<Landing> {
                         border: Border.all(color: _statics.purplish),
                       ),
                       child: MaterialButton(
-                        onPressed: null,
+                        onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => SignUp())),
                         child: Text(
                           "SIGNUP",
                           style: TextStyle(
@@ -74,11 +83,14 @@ class _LandingState extends State<Landing> {
             ),
             Positioned(
               bottom: 5,
-              left: _statics.width * 0.25,
-              child: Text(
-                "Every Product Within Your Reach",
-                style: TextStyle(
-                  color: _statics.purplish,
+              child: Container(
+                width: _statics.width,
+                child: Text(
+                  "Every Product Within Your Reach",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: _statics.purplish,
+                  ),
                 ),
               ),
             ),
