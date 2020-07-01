@@ -7,11 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:toast/toast.dart';
 
 class ApiCalls {
-  static const baseUrl = "http://192.168.43.175:8080";
-  // static const baseUrl = "http://192.168.43.155:8080";
+  // static const baseUrl = "http://192.168.43.175:8080";
+  static const baseUrl = "http://192.168.43.155:8080";
   final Geolocator geoLocator = Geolocator()..forceAndroidLocationManager;
   Position _currentPosition;
   // ignore: missing_return
@@ -47,7 +48,7 @@ class ApiCalls {
   Future<List<Products>> getProducts(context) async {
     var products = List<Products>();
     try {
-      var response = await http.get("$baseUrl/products");
+      var response = await http.get("$baseUrl/mobile/products");
       if (response.statusCode == 200) {
         var productsJson = json.decode(response.body);
         for (var productJson in productsJson) {
@@ -70,23 +71,27 @@ class ApiCalls {
 
   getAddressFromLatLng() async {
     await _getCurrentLocation();
+    Placemark place;
     try {
       List<Placemark> p = await geoLocator.placemarkFromCoordinates(
           _currentPosition.latitude, _currentPosition.longitude);
-      Placemark place = p[0];
-      return place;
+      place = p[0];
     } catch (e) {
       print(e);
     }
+    print(place);
+    return place;
   }
 
   _getCurrentLocation() async {
-    await geoLocator
+    if(await Permission.location.request().isGranted){
+      await geoLocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
-      _currentPosition = position;
-    }).catchError((e) {
-      print(e);
-    });
+          _currentPosition = position;
+        }).catchError((e) {
+          print(e);
+        });
+    }
   }
 }
