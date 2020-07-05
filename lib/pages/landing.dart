@@ -1,9 +1,9 @@
 import 'dart:ui';
-import 'package:easy_locate/pages/home.dart';
-import 'package:easy_locate/pages/signup.dart';
+
+import 'package:easy_locate/pages/login.dart';
+import 'package:easy_locate/pages/verification.dart';
 import 'package:easy_locate/statics/static.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 
 class Landing extends StatefulWidget {
   @override
@@ -40,9 +40,7 @@ class _LandingState extends State<Landing> {
                         onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ProgressHUD(
-                              child: Home(),
-                            ),
+                            builder: (context) => Login(),
                           ),
                         ),
                         child: Text(
@@ -66,7 +64,10 @@ class _LandingState extends State<Landing> {
                       ),
                       child: MaterialButton(
                         onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => SignUp())),
+                          MaterialPageRoute(
+                            builder: (context) => MobileNumberVerification(),
+                          ),
+                        ),
                         child: Text(
                           "SIGNUP",
                           style: TextStyle(

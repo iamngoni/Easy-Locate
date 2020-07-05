@@ -20,17 +20,23 @@ class _ProductsListState extends State<ProductsList> {
         height: _statics.height,
         width: _statics.width,
         child: FutureBuilder(
-          future: _api.getProducts(context),
-          builder: (context, snapshot){
-            while(!snapshot.hasData){
-              return Center(child: SizedBox(height: 15, width: 15, child: CircularProgressIndicator()));
+          future: _api.getProducts(),
+          builder: (context, snapshot) {
+            while (!snapshot.hasData) {
+              return Center(
+                  child: SizedBox(
+                      height: 15,
+                      width: 15,
+                      child: CircularProgressIndicator()));
             }
             var products = snapshot.data;
             return ListView.builder(
               itemCount: products.length,
-              itemBuilder: (context, index){
+              itemBuilder: (context, index) {
                 return ListTile(
-                  leading: Image(image: NetworkImage(products[index].imageUrl),),
+                  leading: Image(
+                    image: NetworkImage(products[index].imageUrl),
+                  ),
                   title: Text("${products[index].model}"),
                 );
               },

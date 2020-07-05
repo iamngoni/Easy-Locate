@@ -1,7 +1,10 @@
 import 'dart:async';
+
+import 'package:easy_locate/pages/home.dart';
 import 'package:easy_locate/pages/landing.dart';
 import 'package:easy_locate/statics/static.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -10,11 +13,20 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   bool isTimerDone = false;
-  void toOnboardingScreen() async {
+  toOnboardingScreen() async {
+    var preferences = await SharedPreferences.getInstance();
+    var token = preferences.getString("token");
+    if (token != null || token != '') {
+      return Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Home(),
+        ),
+      );
+    }
     setState(() {
       isTimerDone = true;
     });
-
     Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
   }
 
