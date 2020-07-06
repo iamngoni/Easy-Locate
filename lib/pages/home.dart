@@ -3,7 +3,9 @@ import 'package:easy_locate/api/apiCalls.dart';
 import 'package:easy_locate/api/jwt.dart';
 import 'package:easy_locate/models/categories.dart';
 import 'package:easy_locate/models/product.dart';
+import 'package:easy_locate/pages/category_view.dart';
 import 'package:easy_locate/pages/login.dart';
+import 'package:easy_locate/pages/product_details.dart';
 import 'package:easy_locate/pages/products_list.dart';
 import 'package:easy_locate/statics/static.dart';
 import 'package:easy_locate/widgets/stars.dart';
@@ -363,7 +365,14 @@ class _HomeState extends State<Home> {
                                             height: 25,
                                             color: _statics.purplish,
                                             child: MaterialButton(
-                                              onPressed: null,
+                                              onPressed: () =>
+                                                  Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProductDetails(
+                                                          products[index].id),
+                                                ),
+                                              ),
                                               child: Text(
                                                 "More Details",
                                                 style: TextStyle(
@@ -452,45 +461,79 @@ class _HomeState extends State<Home> {
                               );
                             }
                             var categories = snapshot.data;
+                            if (categories.length == 0 ||
+                                categories.length < 1) {
+                              return Container(
+                                color: Colors.white,
+                                width: _statics.width,
+                                height: _statics.height * 0.30,
+                                child: Center(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Image(
+                                        image: AssetImage(
+                                          "assets/images/loading.png",
+                                        ),
+                                        height: _statics.height * 0.25,
+                                      ),
+                                      Text(
+                                        "Still trying to fetch data",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
                             return ListView.builder(
                               scrollDirection: Axis.horizontal,
                               itemCount: categories.length,
                               // ignore: missing_return
                               itemBuilder: (context, index) {
-                                return Card(
-                                  color: _statics.purplish,
-                                  elevation: 20.0,
-                                  child: Container(
-                                    height: _statics.height * 0.3,
-                                    width: _statics.width * 0.5,
-                                    color: Colors.white.withOpacity(0.4),
-                                    child: Row(
-                                      children: <Widget>[
-                                        RotatedBox(
-                                          quarterTurns: 1,
-                                          child: Text(
-                                            categories[index]
-                                                .name
-                                                .toUpperCase(),
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                                return GestureDetector(
+                                  onTap: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          CategoryView(categories[index].name),
+                                    ),
+                                  ),
+                                  child: Card(
+                                    color: _statics.purplish,
+                                    elevation: 20.0,
+                                    child: Container(
+                                      height: _statics.height * 0.3,
+                                      width: _statics.width * 0.5,
+                                      color: Colors.white.withOpacity(0.4),
+                                      child: Row(
+                                        children: <Widget>[
+                                          RotatedBox(
+                                            quarterTurns: 1,
+                                            child: Text(
+                                              categories[index]
+                                                  .name
+                                                  .toUpperCase(),
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              softWrap: false,
+                                              textAlign: TextAlign.center,
                                             ),
-                                            overflow: TextOverflow.ellipsis,
-                                            softWrap: false,
-                                            textAlign: TextAlign.center,
                                           ),
-                                        ),
-                                        Expanded(
-                                          child: FadeInImage.assetNetwork(
-                                            placeholder:
-                                                'assets/images/loading.gif',
-                                            image: categories[index].image,
-                                            fit: BoxFit.cover,
-                                            height: _statics.height * 0.3,
+                                          Expanded(
+                                            child: FadeInImage.assetNetwork(
+                                              placeholder:
+                                                  'assets/images/loading.gif',
+                                              image: categories[index].image,
+                                              fit: BoxFit.cover,
+                                              height: _statics.height * 0.3,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );

@@ -3,21 +3,24 @@ import 'package:easy_locate/models/product.dart';
 import 'package:easy_locate/pages/product_details.dart';
 import 'package:easy_locate/statics/static.dart';
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 
-class ProductsList extends StatefulWidget {
+class CategoryView extends StatefulWidget {
+  String _category;
+  CategoryView(this._category);
   @override
-  _ProductsListState createState() => _ProductsListState();
+  _CategoryViewState createState() => _CategoryViewState();
 }
 
-class _ProductsListState extends State<ProductsList> {
-  Future<dynamic> _place;
+class _CategoryViewState extends State<CategoryView> {
+  ApiCalls _api = new ApiCalls();
   Future<List<Products>> _products;
-  var _api = new ApiCalls();
+  Future<dynamic> _place;
 
   @override
   void initState() {
+    _products = _api.getProductsByCategory(this.widget._category);
     _place = _api.getActualLocation();
-    _products = _api.getProducts();
     super.initState();
   }
 
@@ -53,11 +56,16 @@ class _ProductsListState extends State<ProductsList> {
                           ),
                         ),
                         SizedBox(width: 5),
-                        Text(
-                          "Products",
-                          style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
+                        SizedBox(
+                          width: _statics.width * 0.5,
+                          child: Text(
+                            this.widget._category,
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: false,
                           ),
                         ),
                       ],
@@ -119,6 +127,18 @@ class _ProductsListState extends State<ProductsList> {
                       );
                     }
                     var products = snapshot.data;
+                    if (products.length == 0 || products.length < 1) {
+                      Toast.show(
+                        "No products in ${this.widget._category}",
+                        context,
+                        gravity: Toast.BOTTOM,
+                        duration: Toast.LENGTH_SHORT,
+                        textColor: Colors.white,
+                      );
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
                     return ListView.builder(
                       itemCount: products.length,
                       itemBuilder: (context, index) {

@@ -11,7 +11,7 @@ import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiCalls {
-  static const baseUrl = "http://10.15.17.185:8080";
+  static const baseUrl = "http://192.168.137.58:8080";
 //  static const baseUrl = "http://hitwo-api.herokuapp.com";
   final Geolocator geoLocator = Geolocator()..forceAndroidLocationManager;
 
@@ -170,5 +170,46 @@ class ApiCalls {
       print(e);
       return [];
     }
+  }
+
+  Future<Products> getProductById(String id) async {
+    var preferences = await SharedPreferences.getInstance();
+    var token = preferences.getString("token");
+    var response;
+    try {
+      response = await http.get("$baseUrl/mobile/product/$id", headers: {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer $token"
+      });
+      if (response.statusCode == 200) {
+        return Products.fromJSON(json.decode(response.body));
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<List<Products>> getProductsByCategory(String category) async {
+    var preferences = await SharedPreferences.getInstance();
+    var token = preferences.getString("token");
+    var products = List<Products>();
+    var response;
+    try {
+      response = await http.get("$baseUrl/mobile/category/$category", headers: {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer $token"
+      });
+      if (response.statusCode == 200) {
+        var productsJson = json.decode(response.body);
+        for (var productJson in productsJson) {
+          products.add(Products.fromJSON(productJson));
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    return products;
   }
 }

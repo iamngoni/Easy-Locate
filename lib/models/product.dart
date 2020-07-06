@@ -3,12 +3,12 @@ import 'dart:core';
 class Products {
   List<String> colors;
   List<String> metadata;
-  List<String> gallery;
+  List<dynamic> gallery;
   String storeName;
   String storeId;
   String storeAddress;
-  double storeLatitude;
-  double storeLongitude;
+//  double storeLatitude;
+//  double storeLongitude;
   String category;
   String description;
   int size;
@@ -18,6 +18,7 @@ class Products {
   String imageUrl;
   double price;
   DateTime date;
+  String id;
 
   Products(
       {this.size,
@@ -30,10 +31,10 @@ class Products {
       this.storeName,
       this.storeAddress,
       this.storeId,
-      this.storeLatitude,
-      this.storeLongitude,
       this.category,
-      this.description});
+      this.description,
+      this.id,
+      this.gallery});
 
   Products.fromJSON(Map<String, dynamic> json)
       : size = json['size'],
@@ -46,8 +47,8 @@ class Products {
         storeName = json['storeName'],
         storeAddress = json['storeAddress'],
         storeId = json['storeId'],
-        storeLatitude = json['storeLatitude'].toDouble(),
-        storeLongitude = json['storeLongitude'].toDouble(),
         category = json['category'],
-        description = json['description'];
+        description = json['description'],
+        id = json['_id'],
+        gallery = json['gallery'];
 }
