@@ -26,6 +26,8 @@ dependencies:
   permission_handler: ^5.0.1+1
   badges: ^1.1.1
   location: ^3.0.2
+  url_launcher: ^5.5.0
+  flutter_custom_dialog: ^1.0.20
 dev_dependencies:
   flutter_test:
     sdk: flutter

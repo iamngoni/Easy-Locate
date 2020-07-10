@@ -11,7 +11,7 @@ import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiCalls {
-  static const baseUrl = "http://192.168.137.58:8080";
+  static const baseUrl = "http://10.15.10.51:8080";
 //  static const baseUrl = "http://hitwo-api.herokuapp.com";
   final Geolocator geoLocator = Geolocator()..forceAndroidLocationManager;
 
@@ -79,7 +79,7 @@ class ApiCalls {
   }
 
   Future<Placemark> getActualLocation() async {
-    LocationData data = await _getCoords();
+    LocationData data = await getCoords();
     List<Placemark> placemarc;
     try {
       placemarc = await geoLocator.placemarkFromCoordinates(
@@ -91,7 +91,7 @@ class ApiCalls {
     return place;
   }
 
-  _getCoords() async {
+  getCoords() async {
     Location location = new Location();
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
@@ -172,6 +172,7 @@ class ApiCalls {
     }
   }
 
+  // ignore: missing_return
   Future<Products> getProductById(String id) async {
     var preferences = await SharedPreferences.getInstance();
     var token = preferences.getString("token");
@@ -211,5 +212,42 @@ class ApiCalls {
       print(e);
     }
     return products;
+  }
+
+  getMapData(productId, storeId) async {
+    var response;
+    var preferences = await SharedPreferences.getInstance();
+    var token = preferences.getString("token");
+    try {
+      response = await http
+          .get("$baseUrl/mobile/selected/$storeId/$productId", headers: {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer $token"
+      });
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  getRelatedStores(productId) async {
+    var response;
+    var preferences = await SharedPreferences.getInstance();
+    var token = preferences.getString("token");
+    try {
+      response = await http.get("$baseUrl/markers/stores/$productId", headers: {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer $token"
+      });
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }

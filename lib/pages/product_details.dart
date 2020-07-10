@@ -2,6 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:easy_locate/api/apiCalls.dart';
 import 'package:easy_locate/models/product.dart';
+import 'package:easy_locate/pages/mapview.dart';
 import 'package:easy_locate/statics/static.dart';
 import 'package:easy_locate/widgets/stars.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,28 @@ class _ProductDetailsState extends State<ProductDetails> {
     }
     print(imagesList);
     return imagesList;
+  }
+
+  void _showAlertDialog(context) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return alert dialog object
+        return AlertDialog(
+          title: new Text("Alert Dialog title"),
+          //content: new Text("Alert Dialog body"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -230,13 +253,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   fontSize: 18,
                                 ),
                               ),
-                              Badge(
-                                badgeColor: Colors.white.withOpacity(0.8),
-                                shape: BadgeShape.square,
-                                borderRadius: 20,
-                                toAnimate: false,
-                                badgeContent: StarsRating(
-                                  value: product.rating,
+                              GestureDetector(
+                                onTap: () => _showAlertDialog,
+                                child: Badge(
+                                  badgeColor: Colors.white.withOpacity(0.8),
+                                  shape: BadgeShape.square,
+                                  borderRadius: 20,
+                                  toAnimate: false,
+                                  badgeContent: StarsRating(
+                                    value: product.rating,
+                                  ),
                                 ),
                               ),
                             ],
@@ -327,6 +353,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                               width: _statics.width * 0.9,
                               color: Colors.white.withOpacity(0.8),
                               child: MaterialButton(
+                                onPressed: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        MapView(product.storeId, product.id),
+                                  ),
+                                ),
                                 child: Text(
                                   "View On Map",
                                   style: TextStyle(

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
 
 class CategoryView extends StatefulWidget {
-  String _category;
+  final String _category;
   CategoryView(this._category);
   @override
   _CategoryViewState createState() => _CategoryViewState();
