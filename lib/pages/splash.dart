@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_locate/api/jwt.dart';
 import 'package:easy_locate/pages/home.dart';
 import 'package:easy_locate/pages/landing.dart';
 import 'package:easy_locate/statics/static.dart';
@@ -17,6 +18,14 @@ class _SplashScreenState extends State<SplashScreen> {
     var preferences = await SharedPreferences.getInstance();
     var token = preferences.getString("token");
     if (token != null || token != '') {
+      if (!JwtVerify().isExpired(token)) {
+        return Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Landing(),
+          ),
+        );
+      }
       return Navigator.push(
         context,
         MaterialPageRoute(

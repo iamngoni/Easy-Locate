@@ -6,6 +6,7 @@ import 'package:easy_locate/pages/mapview.dart';
 import 'package:easy_locate/statics/static.dart';
 import 'package:easy_locate/widgets/stars.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class ProductDetails extends StatefulWidget {
   final String _id;
@@ -18,6 +19,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   Future<Products> _product;
   Future<dynamic> _place;
   ApiCalls _api = new ApiCalls();
+  final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     _product = _api.getProductById(this.widget._id);
@@ -34,23 +36,100 @@ class _ProductDetailsState extends State<ProductDetails> {
     return imagesList;
   }
 
-  void _showAlertDialog(context) {
-    // flutter defined function
+  void _showRatingDialog(context) {
+    bool _rating = false;
     showDialog(
+      useSafeArea: true,
       context: context,
       builder: (BuildContext context) {
         // return alert dialog object
-        return AlertDialog(
-          title: new Text("Alert Dialog title"),
-          //content: new Text("Alert Dialog body"),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("OK"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+        return ModalProgressHUD(
+          inAsyncCall: _rating,
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: AlertDialog(
+              content: Container(
+                height: Statics(context).height * 0.5,
+                width: Statics(context).width,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Divider(
+                        color: Statics(context).purplish,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 10,
+                        ),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "Rating (out of 5)",
+                            border: InputBorder.none,
+                            fillColor:
+                                Statics(context).purplish.withOpacity(0.2),
+                            filled: true,
+                            prefixIcon: Icon(
+                              Icons.star,
+                            ),
+                          ),
+                          // ignore: missing_return
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return "Rating field can't be empty";
+                            }
+                            if (int.parse(value) < 1 || int.parse(value) > 5) {
+                              return "Value exceeds limits";
+                            }
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: Statics(context).width * 0.95,
+                        color: Statics(context).purplish,
+                        child: Row(
+                          children: <Widget>[
+                            MaterialButton(
+                              child: Text(
+                                "Rate Product",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              onPressed: () {
+                                if (_formKey.currentState.validate()) {
+                                  setState(() {
+                                    _rating = !_rating;
+                                  });
+                                }
+                              },
+                            ),
+                            MaterialButton(
+                              child: Text(
+                                "Rate Product",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              onPressed: () {
+                                if (_formKey.currentState.validate()) {
+                                  setState(() {
+                                    _rating = !_rating;
+                                  });
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ],
+          ),
         );
       },
     );
@@ -58,7 +137,6 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
-    print(this.widget._id);
     Statics _statics = new Statics(context);
     return SafeArea(
       child: Scaffold(
@@ -254,7 +332,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () => _showAlertDialog,
+                                onTap: () => _showRatingDialog(context),
                                 child: Badge(
                                   badgeColor: Colors.white.withOpacity(0.8),
                                   shape: BadgeShape.square,

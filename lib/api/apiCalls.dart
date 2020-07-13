@@ -11,7 +11,7 @@ import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiCalls {
-  static const baseUrl = "http://10.15.10.51:8080";
+  static const baseUrl = "http://192.168.43.79:8080";
 //  static const baseUrl = "http://hitwo-api.herokuapp.com";
   final Geolocator geoLocator = Geolocator()..forceAndroidLocationManager;
 
