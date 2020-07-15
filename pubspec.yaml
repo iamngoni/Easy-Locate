@@ -28,7 +28,7 @@ dependencies:
   location: ^3.0.2
   url_launcher: ^5.5.0
   flutter_custom_dialog: ^1.0.20
-  emojis: ^0.8.1
+  date_time_format: ^1.0.0+4
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -4,9 +4,7 @@ class Products {
   List<String> colors;
   List<String> metadata;
   List<dynamic> gallery;
-  String storeName;
-  String storeId;
-  String storeAddress;
+  Map<String, dynamic> owner;
 //  double storeLatitude;
 //  double storeLongitude;
   String category;
@@ -17,7 +15,7 @@ class Products {
   String model;
   String imageUrl;
   double price;
-  DateTime date;
+  String date;
   String id;
 
   Products(
@@ -28,9 +26,7 @@ class Products {
       this.imageUrl,
       this.price,
       this.date,
-      this.storeName,
-      this.storeAddress,
-      this.storeId,
+      this.owner,
       this.category,
       this.description,
       this.id,
@@ -43,10 +39,8 @@ class Products {
         model = json['model'],
         imageUrl = json['imageUrl'],
         price = json['price'].toDouble(),
-        date = DateTime.parse(json['date']),
-        storeName = json['storeName'],
-        storeAddress = json['storeAddress'],
-        storeId = json['storeId'],
+        date = json['date'],
+        owner = json['owner'],
         category = json['category'],
         description = json['description'],
         id = json['_id'],

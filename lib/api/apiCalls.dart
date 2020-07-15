@@ -11,7 +11,7 @@ import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiCalls {
-  static const baseUrl = "http://192.168.43.79:8080";
+  static const baseUrl = "http://10.15.10.162:8081";
 //  static const baseUrl = "http://hitwo-api.herokuapp.com";
   final Geolocator geoLocator = Geolocator()..forceAndroidLocationManager;
 
@@ -184,6 +184,7 @@ class ApiCalls {
         "Authorization": "Bearer $token"
       });
       if (response.statusCode == 200) {
+        print(response.body);
         return Products.fromJSON(json.decode(response.body));
       }
     } catch (e) {
@@ -245,6 +246,46 @@ class ApiCalls {
       });
       if (response.statusCode == 200) {
         return json.decode(response.body);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  getComments(productId) async {
+    var response;
+    var preferences = await SharedPreferences.getInstance();
+    var token = preferences.getString("token");
+    try {
+      response =
+          await http.get("$baseUrl/mobile/comments/$productId", headers: {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer $token"
+      });
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  postComment(productId, comment) async {
+    var response;
+    var preferences = await SharedPreferences.getInstance();
+    var token = preferences.getString("token");
+    try {
+      response = await http.post("$baseUrl/mobile/comment/$productId", body: {
+        "comment1": comment
+      }, headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer $token"
+      });
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
       }
     } catch (e) {
       print(e);

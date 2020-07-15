@@ -207,11 +207,16 @@ class _MapViewState extends State<MapView> {
                                         fontSize: 18,
                                       ),
                                     ),
-                                    Text(
-                                      "${data["product"]["name"]} ${data["product"]["model"]}",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
+                                    SizedBox(
+                                      width: _statics.width * 0.6,
+                                      child: Text(
+                                        "${data["product"]["name"]} ${data["product"]["model"]}",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                        ),
+                                        softWrap: false,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ],
@@ -273,7 +278,7 @@ class _MapViewState extends State<MapView> {
                                       ),
                                     ),
                                     Text(
-                                      "${data["store"]["name"]}",
+                                      "${data["store"]["Bname"]}",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 18,
@@ -296,7 +301,7 @@ class _MapViewState extends State<MapView> {
                                       ),
                                     ),
                                     Text(
-                                      "${data["store"]["address"]}",
+                                      "${data["store"]["Aline1"]}",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 18,
@@ -333,9 +338,9 @@ class _MapViewState extends State<MapView> {
                                     ),
                                     GestureDetector(
                                       onTap: () => _makePhoneCall(
-                                          "tel:${data["store"]["phone"]}"),
+                                          "tel:${data["store"]["Bphone"]}"),
                                       child: Text(
-                                        "${data["store"]["phone"]}",
+                                        "${data["store"]["Bphone"]}",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 18,

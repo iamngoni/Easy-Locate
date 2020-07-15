@@ -2,11 +2,14 @@ import 'package:badges/badges.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:easy_locate/api/apiCalls.dart';
 import 'package:easy_locate/models/product.dart';
+import 'package:easy_locate/pages/comments.dart';
 import 'package:easy_locate/pages/mapview.dart';
 import 'package:easy_locate/statics/static.dart';
 import 'package:easy_locate/widgets/stars.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 
 class ProductDetails extends StatefulWidget {
   final String _id;
@@ -36,98 +39,174 @@ class _ProductDetailsState extends State<ProductDetails> {
     return imagesList;
   }
 
-  void _showRatingDialog(context) {
+  void _showRatingDialog(context, productId) {
     bool _rating = false;
+    String productRating;
+    final _formKey = GlobalKey<FormState>();
     showDialog(
       useSafeArea: true,
       context: context,
       builder: (BuildContext context) {
         // return alert dialog object
-        return ModalProgressHUD(
-          inAsyncCall: _rating,
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.5,
-            child: AlertDialog(
-              content: Container(
-                height: Statics(context).height * 0.5,
-                width: Statics(context).width,
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      Divider(
-                        color: Statics(context).purplish,
+        return AlertDialog(
+          content: Container(
+            height: Statics(context).height * 0.35,
+            width: Statics(context).width * 0.8,
+            color: Colors.white,
+            child: ListView(
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  color: Statics(context).purplish.withOpacity(0.6),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Product Rating",
+                      style: TextStyle(
+                        color: Colors.white,
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 10,
-                        ),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: "Rating (out of 5)",
-                            border: InputBorder.none,
-                            fillColor:
-                                Statics(context).purplish.withOpacity(0.2),
-                            filled: true,
-                            prefixIcon: Icon(
-                              Icons.star,
-                            ),
-                          ),
-                          // ignore: missing_return
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "Rating field can't be empty";
-                            }
-                            if (int.parse(value) < 1 || int.parse(value) > 5) {
-                              return "Value exceeds limits";
-                            }
-                          },
-                        ),
-                      ),
-                      Container(
-                        width: Statics(context).width * 0.95,
-                        color: Statics(context).purplish,
-                        child: Row(
-                          children: <Widget>[
-                            MaterialButton(
-                              child: Text(
-                                "Rate Product",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  setState(() {
-                                    _rating = !_rating;
-                                  });
-                                }
-                              },
-                            ),
-                            MaterialButton(
-                              child: Text(
-                                "Rate Product",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  setState(() {
-                                    _rating = !_rating;
-                                  });
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+                SizedBox(
+                  height: 10,
+                ),
+                Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      labelText: "Rating out of 5",
+                      labelStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.grey.withOpacity(0.4),
+                    ),
+                    // ignore: missing_return
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "Field can't be empty";
+                      }
+                      if (int.parse(value) < 1 || int.parse(value) > 5) {
+                        return "Value exceeds limits";
+                      }
+                      setState(() {
+                        productRating = value;
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                Container(
+                  color: Statics(context).purplish,
+                  child: MaterialButton(
+                    onPressed: () async {
+                      if (_formKey.currentState.validate()) {
+                        setState(() {
+                          _rating = true;
+                        });
+                        var response;
+                        var preferences = await SharedPreferences.getInstance();
+                        var token = preferences.getString("token");
+                        try {
+                          response = await http.post(
+                              "http://10.15.10.162:8081/mobile/rate",
+                              body: {
+                                "id": productId,
+                                "rating": productRating
+                              },
+                              headers: {
+                                "Accept": "application/json",
+                                "Authorization": "Bearer $token"
+                              });
+                          if (response.statusCode == 200) {
+                            Toast.show(
+                              "Rating success",
+                              context,
+                              duration: Toast.LENGTH_SHORT,
+                              gravity: Toast.BOTTOM,
+                            );
+                            Navigator.of(context).pop();
+                          } else if (response.statusCode == 401) {
+                            Toast.show(
+                              "Exceeded max rating on product",
+                              context,
+                              duration: Toast.LENGTH_SHORT,
+                              gravity: Toast.BOTTOM,
+                            );
+                          } else if (response.statusCode == 404) {
+                            Toast.show(
+                              "Product no-longer exists",
+                              context,
+                              duration: Toast.LENGTH_SHORT,
+                              gravity: Toast.BOTTOM,
+                            );
+                          } else {
+                            Toast.show(
+                              "Server error",
+                              context,
+                              duration: Toast.LENGTH_SHORT,
+                              gravity: Toast.BOTTOM,
+                            );
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
+                      }
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "RATE",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        _rating
+                            ? Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0,
+                                ),
+                                child: SizedBox(
+                                  height: 15,
+                                  width: 15,
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )
+                            : Container(
+                                height: 0,
+                                width: 0,
+                              ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CommentsView(productId),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Post comment instead?",
+                    style: TextStyle(
+                      color: Statics(context).purplish,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         );
@@ -253,13 +332,18 @@ class _ProductDetailsState extends State<ProductDetails> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                "${product.name} ${product.model}",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                              SizedBox(
+                                child: Text(
+                                  "${product.name} ${product.model}",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  softWrap: false,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
+                                width: _statics.width * 0.7,
                               ),
                               Badge(
                                 badgeColor: Colors.white.withOpacity(0.8),
@@ -296,12 +380,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 shape: BadgeShape.square,
                                 borderRadius: 20,
                                 toAnimate: false,
-                                badgeContent: Text(
-                                  "${product.category}",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
+                                badgeContent: SizedBox(
+                                  width: _statics.width * 0.4,
+                                  child: Text(
+                                    "${product.category}",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ),
@@ -332,7 +421,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () => _showRatingDialog(context),
+                                onTap: () =>
+                                    _showRatingDialog(context, this.widget._id),
                                 child: Badge(
                                   badgeColor: Colors.white.withOpacity(0.8),
                                   shape: BadgeShape.square,
@@ -382,7 +472,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 borderRadius: 20,
                                 toAnimate: false,
                                 badgeContent: Text(
-                                  "${product.storeName}",
+                                  "${product.owner["Bname"]}",
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -412,7 +502,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 borderRadius: 20,
                                 toAnimate: false,
                                 badgeContent: Text(
-                                  "${product.storeAddress}",
+                                  "${product.owner["Aline1"]}",
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -433,8 +523,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: MaterialButton(
                                 onPressed: () => Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        MapView(product.storeId, product.id),
+                                    builder: (context) => MapView(
+                                        product.owner["_id"], product.id),
                                   ),
                                 ),
                                 child: Text(

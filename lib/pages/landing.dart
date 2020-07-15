@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:easy_locate/pages/login.dart';
-import 'package:easy_locate/pages/verification.dart';
+import 'package:easy_locate/pages/signup.dart';
 import 'package:easy_locate/statics/static.dart';
 import 'package:flutter/material.dart';
 
@@ -65,7 +65,7 @@ class _LandingState extends State<Landing> {
                       child: MaterialButton(
                         onPressed: () => Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => MobileNumberVerification(),
+                            builder: (context) => SignUp(),
                           ),
                         ),
                         child: Text(
