@@ -9,9 +9,9 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: '12.x'
-    - uses: subosito/flutter-action@v1
+    - uses: subosito/flutter-action@v1.3.2
       with:
-        flutter-version: '1.7.8+hotfix.4'
+        flutter-version: '1.9.1+hotfix.6'
     - run: flutter pub get
     - run: flutter test
     - run: flutter build apk --debug --split-per-abi
@@ -20,3 +20,4 @@ jobs:
       with:
         artifacts: "build/app/outputs/apk/debug/*.apk"
         token: 3188c7a8ecc718da61dafe7f65b9e0c2a3b5ec51
+  
