@@ -1,16 +1,5 @@
-# easy_locate
+# Easy Locate
 
-A new Flutter project.
+Easy Locate is mobile application developed with Flutter. It's main purpose is to enable businesses to be "seen" i.e. they can signup and upload their products and when a user searches for a product on this mobile application they can be provided with the location details of the product (business where the product is) and a map with directions
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Easy-Locate Build](https://github.com/iamngoni/Easy-Locate/workflows/Easy-Locate%20Build/badge.svg)
