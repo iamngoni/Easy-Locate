@@ -184,6 +184,10 @@ class _SignUpState extends State<SignUp> {
                                       labelStyle: TextStyle(
                                         color: _statics.purplish,
                                       ),
+                                      hintText: "use +263",
+                                      hintStyle: TextStyle(
+                                        color: _statics.purplish,
+                                      ),
                                       fillColor:
                                           _statics.purplish.withOpacity(0.2),
                                       focusColor: _statics.purplish,

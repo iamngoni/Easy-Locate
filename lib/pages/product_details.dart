@@ -108,12 +108,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                         setState(() {
                           _rating = true;
                         });
+//                        const baseUrl = "http://192.168.43.91:8081";
+                        const baseUrl = "http://10.15.10.162:8081";
                         var response;
                         var preferences = await SharedPreferences.getInstance();
                         var token = preferences.getString("token");
                         try {
-                          response = await http.post(
-                              "http://10.15.10.162:8081/mobile/rate",
+                          response = await http.post("$baseUrl/mobile/rate",
                               body: {
                                 "id": productId,
                                 "rating": productRating
@@ -242,9 +243,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          "Product Details",
+                          "Details",
                           style: TextStyle(
-                            fontSize: 25,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -389,8 +390,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
                                     ),
+                                    textAlign: TextAlign.center,
                                     softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
+                                    overflow: TextOverflow.fade,
                                   ),
                                 ),
                               ),

@@ -59,7 +59,7 @@ class _LoginState extends State<Login> {
                               "Login",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 25,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -67,7 +67,7 @@ class _LoginState extends State<Login> {
                               "to your account.",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 25,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

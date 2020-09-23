@@ -1,16 +1,8 @@
-# easy_locate
+# Easy Locate
 
-A new Flutter project.
+Easy Locate is an attempt at developing a mobile application product locator. The app is accompanied with a web portal (developed using Vue) for business people to upload their products and store details. The app shows products to users and users are able to view product information and images, and are also able to view store information and get directions to the store with the help of an integrated Google map.
 
-## Getting Started
+## Screenshots
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Home
+[![Home Screen](https://www.iamngoni.co.zw/images/home.png)](https://www.iamngoni.co.zw/locator)

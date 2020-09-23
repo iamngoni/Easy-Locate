@@ -3,7 +3,6 @@ import 'package:easy_locate/models/product.dart';
 import 'package:easy_locate/pages/product_details.dart';
 import 'package:easy_locate/statics/static.dart';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
 
 class CategoryView extends StatefulWidget {
   final String _category;
@@ -128,15 +127,13 @@ class _CategoryViewState extends State<CategoryView> {
                     }
                     var products = snapshot.data;
                     if (products.length == 0 || products.length < 1) {
-                      Toast.show(
-                        "No products in ${this.widget._category}",
-                        context,
-                        gravity: Toast.BOTTOM,
-                        duration: Toast.LENGTH_SHORT,
-                        textColor: Colors.white,
-                      );
                       return Center(
-                        child: CircularProgressIndicator(),
+                        child: Text(
+                          "No products in this category",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
                       );
                     }
                     return ListView.builder(
@@ -146,9 +143,12 @@ class _CategoryViewState extends State<CategoryView> {
                           padding: const EdgeInsets.all(5.0),
                           child: GestureDetector(
                             onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ProductDetails(products[index].id))),
+                              MaterialPageRoute(
+                                builder: (context) => ProductDetails(
+                                  products[index].id,
+                                ),
+                              ),
+                            ),
                             child: Card(
                               color: Colors.white.withOpacity(0.8),
                               child: ListTile(

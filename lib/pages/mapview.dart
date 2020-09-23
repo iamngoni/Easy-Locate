@@ -1,6 +1,10 @@
 import 'package:easy_locate/api/apiCalls.dart';
 import 'package:easy_locate/statics/static.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,8 +17,12 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
+  BitmapDescriptor pinLocationIcon;
   Future<dynamic> _place;
   var _api = new ApiCalls();
+  PolylinePoints polylinePoints;
+  List<LatLng> polylineCoordinates = [];
+  Map<PolylineId, Polyline> polylines = {};
   var _response;
   LatLng _center;
   GoogleMapController _mapController;
@@ -36,7 +44,42 @@ class _MapViewState extends State<MapView> {
     _response = _api.getMapData(this.widget.productId, this.widget.storeId);
     _data = _api.getCoords();
     _stores = _api.getRelatedStores(this.widget.productId);
+    BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(devicePixelRatio: 2.5),
+      "assets/images/marker.png",
+    ).then((onValue) {
+      pinLocationIcon = onValue;
+    });
     super.initState();
+  }
+
+  _createPolylines(Position start, Position destination) async {
+    polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      "AIzaSyCnx7E3hzCsR5onzv34H0Mk5BMdG3CzKUk",
+      PointLatLng(start.latitude, start.longitude),
+      PointLatLng(destination.latitude, destination.longitude),
+      travelMode: TravelMode.transit,
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    }
+
+    // Defining an ID
+    PolylineId id = PolylineId('poly');
+
+    // Initializing Polyline
+    Polyline polyline = Polyline(
+      polylineId: id,
+      color: Colors.red,
+      points: polylineCoordinates,
+      width: 3,
+    );
+
+    polylines[id] = polyline;
   }
 
   @override
@@ -157,8 +200,15 @@ class _MapViewState extends State<MapView> {
                             myLocationButtonEnabled: true,
                             mapType: MapType.normal,
                             zoomGesturesEnabled: true,
-                            zoomControlsEnabled: false,
+                            zoomControlsEnabled: true,
                             markers: _markers,
+                            polylines: Set<Polyline>.of(polylines.values),
+                            gestureRecognizers: Set()
+                              ..add(
+                                Factory<PanGestureRecognizer>(
+                                  () => PanGestureRecognizer(),
+                                ),
+                              ),
                           );
                         },
                       ),
@@ -172,6 +222,26 @@ class _MapViewState extends State<MapView> {
                             return Center(child: CircularProgressIndicator());
                           }
                           var data = snapshot.data;
+                          LatLng _storeCenter = LatLng(
+                              double.parse(data["store"]["Latitude"]),
+                              double.parse(data["store"]["Longitude"]));
+                          Marker destinationMarker = Marker(
+                            markerId: MarkerId(data["store"]["Bname"]),
+                            position: _storeCenter,
+                            infoWindow: InfoWindow(
+                              title: "${data["store"]["Bname"]}",
+                              snippet: "${data["store"]["Aline1"]}",
+                            ),
+                            icon: pinLocationIcon,
+                          );
+                          _markers.add(destinationMarker);
+                          _createPolylines(
+                              Position(
+                                  latitude: _center.latitude,
+                                  longitude: _center.longitude),
+                              Position(
+                                  latitude: _storeCenter.latitude,
+                                  longitude: _storeCenter.longitude));
                           return ListView(
                             scrollDirection: Axis.vertical,
                             children: [
@@ -217,6 +287,7 @@ class _MapViewState extends State<MapView> {
                                         ),
                                         softWrap: false,
                                         overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.right,
                                       ),
                                     ),
                                   ],
@@ -300,11 +371,17 @@ class _MapViewState extends State<MapView> {
                                         fontSize: 18,
                                       ),
                                     ),
-                                    Text(
-                                      "${data["store"]["Aline1"]}",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
+                                    SizedBox(
+                                      width: _statics.width * 0.5,
+                                      child: Text(
+                                        "${data["store"]["Aline1"]}",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: false,
+                                        textAlign: TextAlign.right,
                                       ),
                                     ),
                                   ],
@@ -350,25 +427,25 @@ class _MapViewState extends State<MapView> {
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Statistics",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0,
-                                ),
-                                child: Divider(
-                                  color: Colors.white,
-                                ),
-                              ),
+//                              Padding(
+//                                padding: const EdgeInsets.all(8.0),
+//                                child: Text(
+//                                  "Statistics",
+//                                  style: TextStyle(
+//                                    color: Colors.white,
+//                                    fontSize: 20,
+//                                    fontWeight: FontWeight.bold,
+//                                  ),
+//                                ),
+//                              ),
+//                              Padding(
+//                                padding: const EdgeInsets.symmetric(
+//                                  horizontal: 8.0,
+//                                ),
+//                                child: Divider(
+//                                  color: Colors.white,
+//                                ),
+//                              ),
                             ],
                           );
                         },

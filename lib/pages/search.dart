@@ -147,10 +147,24 @@ class _SearchViewState extends State<SearchView> {
                                   ) ||
                               x.description.toLowerCase().contains(
                                     this.widget.searchQuery.toLowerCase(),
+                                  ) ||
+                              x.category.toLowerCase().contains(
+                                    this.widget.searchQuery.toLowerCase(),
                                   ),
                         )
                         .toList();
-                    print(results[0]);
+                    if (results.length == 0 || results.length < 1) {
+                      return Center(
+                        child: Text(
+                          "Product not found",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      );
+                    }
                     return ListView.builder(
                       itemCount: results.length > 0 ? results.length : 0,
                       itemBuilder: (context, index) {

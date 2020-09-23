@@ -205,6 +205,43 @@ class _CommentsViewState extends State<CommentsView> {
                                                 ],
                                               ),
                                             ),
+                                            comments[index]["reply"] != null
+                                                ? Container(
+                                                    width: _statics.width,
+                                                    child: Column(
+                                                      children: [
+                                                        Text(
+                                                          "------reply------",
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons.store,
+                                                                size: 18,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 10,
+                                                              ),
+                                                              Text(
+                                                                comments[index]
+                                                                    ["reply"],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                : Container(
+                                                    height: 0,
+                                                    width: 0,
+                                                  ),
                                           ],
                                         ),
                                       ),
